@@ -7,12 +7,12 @@ let cantidadnotas = 0;
 let nota;
 
 let promedionotas = 0
-alert ("Bienvenido a la calculadora de promedios! indicanos cual es la nota de promoción, posteriormente tus notas y te informamos tu condición")
+alert ("Bienvenido a la calculadora de promedios! Indicanos cuál es la nota de promoción, posteriormente tus notas y te informamos tu condición")
 
 let notareferencia = parseFloat(prompt("Ingrese nota con la que se accede a promoción"));
 
 do{
-    nota = parseFloat(prompt("ingrese notas obtenidas, una vez finalizado ingrese 0"))
+    nota = parseFloat(prompt("Ingrese las notas obtenidas y una vez finalizado ingrese 0"))
 
     if (nota!== 0){
         sumanotas = sumanotas + nota;
@@ -25,7 +25,7 @@ do{
     promedionotas = sumanotas / cantidadnotas;
  
 } else {
-    alert("no suministró datos suficientes")
+    alert("No suministró datos suficientes")
  }  
 
  if (promedionotas >= notareferencia){
