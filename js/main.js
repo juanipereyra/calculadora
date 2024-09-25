@@ -1,67 +1,68 @@
-function obtenerNotaReferencia() {
-    let notareferencia = parseFloat(prompt("Ingrese la nota con la que se accede a promoción:"));
-    
-    if (isNaN(notareferencia) || notareferencia <= 0) {
+let notas = [];
+
+function agregarNota() {
+    const notaInput = document.getElementById('notaIndividual');
+    const nota = parseFloat(notaInput.value);
+
+    if (!isNaN(nota) && nota >= 0) {
+        notas.push(nota);
+        actualizarListaNotas();
+        notaInput.value = '';
+    } else {
         alert("Por favor ingrese una nota válida.");
-        return obtenerNotaReferencia(); 
     }
-
-    return notareferencia;
 }
 
-function capturarNotas() {
-    let notas = [];
-    let nota;
+function actualizarListaNotas() {
+    const listaNotasDiv = document.getElementById('listaNotas');
+    listaNotasDiv.innerHTML = '';  
 
-
-    do {
-        nota = parseFloat(prompt("Ingrese las notas obtenidas. Ingrese 0 cuando haya terminado."));
-        
-        if (nota !== 0) {
-            if (isNaN(nota) || nota < 0) {
-                alert("Por favor ingrese una nota válida.");
-            } else {
-                notas.push(nota); 
-            }
-        }
-    } while (nota !== 0);
-
-    return notas;
-}
-
-function calcularPromedio(notas) {
     if (notas.length > 0) {
-        let sumaNotas = notas.reduce((acumulador, nota) => acumulador + nota, 0); 
+        listaNotasDiv.innerHTML = '<h3>Notas ingresadas:</h3>';
+        notas.forEach((nota, index) => {
+            listaNotasDiv.innerHTML += `<p>Nota ${index + 1}: ${nota.toFixed(2)}</p>`;
+        });
+    }
+}
+
+function obtenerNotaReferencia() {
+    const notaReferencia = parseFloat(document.getElementById('notaReferencia').value);
+    if (isNaN(notaReferencia) || notaReferencia <= 0) {
+        alert("Por favor ingrese una nota de referencia válida.");
+        return null;
+    }
+    return notaReferencia;
+}
+
+function calcularPromedio() {
+    if (notas.length > 0) {
+        const sumaNotas = notas.reduce((acumulador, nota) => acumulador + nota, 0);
         return sumaNotas / notas.length;
+    }
+    return 0;
+}
+
+function mostrarResultados(promedio, notaReferencia) {
+    const resultadosDiv = document.getElementById('resultados');
+    resultadosDiv.innerHTML = '';
+
+    if (promedio >= notaReferencia) {
+        resultadosDiv.textContent = `FELICIDADES! Con un promedio de ${promedio.toFixed(2)}, estás promocionado.`;
+        resultadosDiv.className = 'resultados success';
     } else {
-        alert("No se ingresaron suficientes notas para calcular un promedio.");
-        return 0;
+        resultadosDiv.textContent = `Lo siento, con un promedio de ${promedio.toFixed(2)}, no alcanzaste la nota de promoción.`;
+        resultadosDiv.className = 'resultados error';
     }
 }
 
-function determinarCondicion(promedionotas, notareferencia) {
-    if (promedionotas >= notareferencia) {
-        alert(`FELICIDADES! Con un promedio de ${promedionotas.toFixed(2)}, estás promocionado.`);
-    } else {
-        alert(`Lo siento, con un promedio de ${promedionotas.toFixed(2)}, no alcanzaste la nota de promoción.`);
+function ejecutarCalculo() {
+    const notaReferencia = obtenerNotaReferencia();
+    
+    if (notaReferencia !== null) {
+        const promedio = calcularPromedio();
+        mostrarResultados(promedio, notaReferencia);
     }
 }
 
-function simuladorPromedios() {
-    alert("Bienvenido a la calculadora de promedios! Indicanos cuál es la nota de promoción, posteriormente tus notas y te informamos tu condición.");
-
-    let notareferencia = obtenerNotaReferencia();
-    let notas = capturarNotas();
-    let promedionotas = calcularPromedio(notas);
-
-    if (promedionotas > 0) {
-        determinarCondicion(promedionotas, notareferencia);
-    }
-}
-
-do {
-    simuladorPromedios();
-    var continuar = confirm("¿Desea calcular otro promedio?");
-} while (continuar);
-
-alert("Gracias por usar nuestra calculadora de promedios!");
+document.getElementById('agregarNota').addEventListener('click', agregarNota);
+document.getElementById('calcularPromedio').addEventListener('click', ejecutarCalculo);
